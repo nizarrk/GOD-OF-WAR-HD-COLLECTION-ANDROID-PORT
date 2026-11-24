@@ -37,7 +37,7 @@ public final class LauncherActivity extends Activity {
     private static final int PEDIR_ZIP = 7, PEDIR_PASTA = 8, PEDIR_PKG = 9, PEDIR_RIF = 10;
     static final String URL_LIVEPIX = "https://livepix.gg/luisxl15",
             URL_PAYPAL = "https://www.paypal.com/donate/?business=7MWMRNN92Z464&no_recurring=0&item_name=God+of+War+HD+Collection",
-            URL_GITHUB = "https://github.com/nizarrk"; // fork mantido por Nizar (o original é luisxl15)
+            URL_GITHUB = "https://github.com/nizarrk/GOD-OF-WAR-HD-COLLECTION-ANDROID-PORT"; // o fork (o original é luisxl15)
     private static boolean aberturaMostrada; // a abertura sai uma vez por vida do processo (voltar do jogo não repete)
     private Tela tela;
     // a tela da LauncherActivity que está aberta agora: a instalação (vários minutos) pode terminar depois de o
