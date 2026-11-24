@@ -76,6 +76,7 @@ public final class GameActivity extends Activity implements SurfaceHolder.Callba
     }
 
     private static GameActivity ativa;
+    private static long inicioTempoJogo = 0;
     private ControlesView controles;
     private final Handler ui = new Handler(Looper.getMainLooper());
 
@@ -89,6 +90,7 @@ public final class GameActivity extends Activity implements SurfaceHolder.Callba
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         ativa = this;
+        Diagnostico.instalarTratadorExcecao(this);
         // driver Vulkan: o libvulkan.so do APK (runtime/vkshim) lê isto no próprio carregamento, que é o do vitart
         // (critérios do DroidDeck: Drivers.paraJogo; a abertura conta para o teste de um driver novo)
         try {
@@ -134,6 +136,9 @@ public final class GameActivity extends Activity implements SurfaceHolder.Callba
 
     // a mesma linha de comando do vitart.exe do PC, com a pasta copiada do PC no armazenamento do celular
     private void iniciar(File raiz, String principal) {
+        inicioTempoJogo = android.os.SystemClock.elapsedRealtime();
+        Diagnostico.gravarInicioJogo(this, raiz, principal);
+        Diagnostico.salvar(this, Diagnostico.gerarRelatorio(this, "Ao abrir o jogo")); // o log para o blackscreen do app
         String libs = getApplicationInfo().nativeLibraryDir;
         if (principal == null || principal.isEmpty()) principal = libs + "/libvt_eboot.so";
         else if (!principal.startsWith("/")) principal = libs + "/" + principal;
@@ -147,6 +152,17 @@ public final class GameActivity extends Activity implements SurfaceHolder.Callba
         Opcoes.gravar(raiz, "language", Idioma.traducao(Idioma.atual(this)));
         nativeSetenv("VITART_SPV_DIR", new File(raiz, "shaders").getPath());
         limitesDoPack(); // antes do vitart_env.txt: ele pode mudar
+        // Aparelhos Samsung (Exynos/Mali/Xclipse) e outras GPUs não-Adreno: o blit direto na swapchain
+        // comprimida (AFBC) produz tela preta. Ativa apresentação por render pass por padrão.
+        try {
+            GpuInfo gpu = GpuInfo.detectar(this);
+            boolean samsung = "samsung".equalsIgnoreCase(Build.MANUFACTURER);
+            if (samsung || !gpu.familia.adreno()) {
+                nativeSetenv("VITART_PRESENT_RP", "1");
+            }
+        } catch (Exception ignorada) {
+            // segue padrão
+        }
         // diagnóstico: <pasta>/vitart_env.txt com CHAVE=valor por linha (as variáveis VITART_* do PC)
         File env = new File(raiz, "vitart_env.txt");
         if (env.isFile()) {
@@ -577,6 +593,13 @@ public final class GameActivity extends Activity implements SurfaceHolder.Callba
     @SuppressWarnings("unused")
     static void onGameExit(String ignorado) {
         GameActivity a = ativa;
-        if (a != null) a.ui.post(a::sair);
+        if (a != null) {
+            long duracao = android.os.SystemClock.elapsedRealtime() - inicioTempoJogo;
+            if (duracao < 5000 && inicioTempoJogo > 0) {
+                Diagnostico.registrarSaidaPrecoce(a, duracao);
+                Diagnostico.salvar(a, Diagnostico.gerarRelatorio(a, "Encerramento precoce (< 5s)"));
+            }
+            a.ui.post(a::sair);
+        }
     }
 }

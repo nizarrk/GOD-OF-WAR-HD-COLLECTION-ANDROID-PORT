@@ -14,4 +14,10 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@null</item>
     </style>
+    <!-- Jogo: janela translúcida para a SurfaceView do Vulkan aparecer através dela (no Android novo o
+         furo da SurfaceView não basta com o fundo preto opaco da janela: a tela ficava preta). -->
+    <style name="Tema.Jogo" parent="Tema">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

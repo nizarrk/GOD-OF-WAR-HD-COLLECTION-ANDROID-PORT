@@ -37,7 +37,7 @@ public final class LauncherActivity extends Activity {
     private static final int PEDIR_ZIP = 7, PEDIR_PASTA = 8, PEDIR_PKG = 9, PEDIR_RIF = 10;
     static final String URL_LIVEPIX = "https://livepix.gg/luisxl15",
             URL_PAYPAL = "https://www.paypal.com/donate/?business=7MWMRNN92Z464&no_recurring=0&item_name=God+of+War+HD+Collection",
-            URL_GITHUB = "https://github.com/luisxl15";
+            URL_GITHUB = "https://github.com/nizarrk"; // fork mantido por Nizar (o original é luisxl15)
     private static boolean aberturaMostrada; // a abertura sai uma vez por vida do processo (voltar do jogo não repete)
     private Tela tela;
     // a tela da LauncherActivity que está aberta agora: a instalação (vários minutos) pode terminar depois de o
@@ -47,6 +47,7 @@ public final class LauncherActivity extends Activity {
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
+        Diagnostico.instalarTratadorExcecao(this);
         Pastas.carregar(this);
         tela = new Tela(this);
         telaAtual = tela;
@@ -241,11 +242,11 @@ public final class LauncherActivity extends Activity {
         private static final float[] HEROI_AX = {0.70f, 0.50f, 0.50f}, HEROI_AY = {0.40f, 0.15f, 0.20f};
         private static final float[] CARTAO_AX = {0.5f, 0.78f, 0.22f};
         private static final int CREME = 0xFFF5F0E6, TINTA = 0xFF14100E, TEXTO = 0xFFE8E2D6, AVISO = 0xFFF0C674;
-        // focos: cartões (0..2), atalhos no alto (11 GitHub, 3 troféus, 4 idioma, 5 tela, 6 controles, 7 driver), botões
+        // focos: cartões (0..2), atalhos no alto (11 GitHub, 3 troféus, 4 idioma, 5 tela, 6 controles, 7 driver, 12 diagnóstico), botões
         // (8 Jogar, 9 Controles, 10 Apoie o projeto)
         private static final int F_TROFEUS = 3, F_IDIOMA = 4, F_TELA = 5, F_CONTROLES = 6, F_DRIVER = 7, F_JOGAR = 8, F_PREVIA = 9,
-                F_APOIO = 10, F_GITHUB = 11;
-        private static final int[] ALTO = {0, 1, 2, F_GITHUB, F_TROFEUS, F_IDIOMA, F_TELA, F_CONTROLES, F_DRIVER},
+                F_APOIO = 10, F_GITHUB = 11, F_DIAGNOSTICO = 12;
+        private static final int[] ALTO = {0, 1, 2, F_GITHUB, F_TROFEUS, F_IDIOMA, F_TELA, F_CONTROLES, F_DRIVER, F_DIAGNOSTICO},
                 BAIXO = {F_JOGAR, F_PREVIA, F_APOIO};
         private static final int[] COR_NIVEL = {0xFFD08B4C, 0xFFC6CBD2, 0xFFE8C45C, 0xFF9FC6F0}; // bronze, prata, ouro, platina
 
@@ -280,11 +281,12 @@ public final class LauncherActivity extends Activity {
                 android.view.Choreographer.getInstance().postFrameCallback(this);
             }
         };
-        private final RectF[] alvo = new RectF[12];
+        private final RectF[] alvo = new RectF[13];
         // apoie o projeto (LivePix e PayPal, com o QR do LivePix) e a abertura (logo, depois o aviso)
         private boolean apoio;
         private final RectF[] cartaoApoio = {new RectF(), new RectF()};
         private Bitmap qr;
+        private Bitmap github; // foto do GitHub de quem ajustou o UI (crédito na abertura)
         private float aberturaT = -1; // segundos desde o começo da abertura; -1 = sem abertura
         private boolean telaOp; // proporção da imagem
         private final List<RectF> linhasA = new ArrayList<>();
@@ -313,6 +315,11 @@ public final class LauncherActivity extends Activity {
                 qr = BitmapFactory.decodeStream(in);
             } catch (Exception ignorada) {
                 // sem o QR: só os botões
+            }
+            try (InputStream in = a.getAssets().open("ui/github_nizarrk.jpg")) {
+                github = BitmapFactory.decodeStream(in);
+            } catch (Exception ignorada) {
+                // sem a foto: fica só o texto
             }
         }
 
@@ -435,6 +442,9 @@ public final class LauncherActivity extends Activity {
                 case F_DRIVER:
                     abrirDrivers();
                     return;
+                case F_DIAGNOSTICO:
+                    Diagnostico.exibirDialogo(act);
+                    return;
                 case F_TROFEUS:
                     abrirTrofeus();
                     return;
@@ -487,6 +497,7 @@ public final class LauncherActivity extends Activity {
             cartoes(c, p);
             atalhos(c, w);
             destaque(c, p, w, h);
+            credito(c, w, h);
             dicas(c, w, h, Tr.t("Jogar"));
             barraAtualizacao(c, w);
         }
@@ -572,16 +583,17 @@ public final class LauncherActivity extends Activity {
 
         private void atalhos(Canvas c, int w) {
             float cy = 24 * dp + 40 * dp, cx = w - margem() - 22 * dp, passo = 56 * dp;
-            atalho(c, cx - 5 * passo, cy, F_GITHUB);
-            atalho(c, cx - 4 * passo, cy, F_TROFEUS);
-            atalho(c, cx - 3 * passo, cy, F_IDIOMA);
-            atalho(c, cx - 2 * passo, cy, F_TELA);
-            atalho(c, cx - passo, cy, F_CONTROLES);
-            atalho(c, cx, cy, F_DRIVER);
-            if ((foco >= F_TROFEUS && foco <= F_DRIVER) || foco == F_GITHUB) {
-                String r = foco == F_GITHUB ? "GitHub  ·  luisxl15" : foco == F_TROFEUS ? Tr.t("Troféus") : foco == F_IDIOMA ? Tr.t("Idioma: ") + Idioma.nome(Idioma.atual(act))
+            atalho(c, cx - 6 * passo, cy, F_GITHUB);
+            atalho(c, cx - 5 * passo, cy, F_TROFEUS);
+            atalho(c, cx - 4 * passo, cy, F_IDIOMA);
+            atalho(c, cx - 3 * passo, cy, F_TELA);
+            atalho(c, cx - 2 * passo, cy, F_CONTROLES);
+            atalho(c, cx - passo, cy, F_DRIVER);
+            atalho(c, cx, cy, F_DIAGNOSTICO);
+            if ((foco >= F_TROFEUS && foco <= F_DRIVER) || foco == F_GITHUB || foco == F_DIAGNOSTICO) {
+                String r = foco == F_GITHUB ? "GitHub  ·  nizarrk" : foco == F_TROFEUS ? Tr.t("Troféus") : foco == F_IDIOMA ? Tr.t("Idioma: ") + Idioma.nome(Idioma.atual(act))
                         : foco == F_TELA ? Tr.t("Tela: proporção e texturas HD")
-                        : foco == F_CONTROLES ? Tr.t("Controles na tela") : Tr.t("Driver de vídeo");
+                        : foco == F_CONTROLES ? Tr.t("Controles na tela") : foco == F_DIAGNOSTICO ? Tr.t("Diagnóstico do Sistema") : Tr.t("Driver de vídeo");
                 Paint t = texto(13, true, 0xFFFFFFFF);
                 t.setTextAlign(Paint.Align.RIGHT);
                 t.setShadowLayer(4 * dp, 0, 1 * dp, 0xAA000000);
@@ -689,6 +701,9 @@ public final class LauncherActivity extends Activity {
                 br.cubicTo(cx - 4.5f * k, cy + 6.4f * k, cx - 5.4f * k, cy + 4.2f * k, cx - 7.2f * k, cy + 3.8f * k);
                 c.drawPath(br, rabo);
                 c.restore();
+            } else if (qual == F_DIAGNOSTICO) { // lupa: o log de diagnóstico do app
+                c.drawCircle(cx - 3.5f * k, cy + 2.5f * k, 6f * k, s);
+                c.drawLine(cx - 0.5f * k, cy - 2.5f * k, cx + 9f * k, cy + 6.5f * k, s);
             } else { // chip da GPU
                 RectF q = new RectF(cx - 8 * k, cy - 8 * k, cx + 8 * k, cy + 8 * k);
                 c.drawRoundRect(q, 3 * k, 3 * k, s);
@@ -896,6 +911,24 @@ public final class LauncherActivity extends Activity {
             t.setTextSize(sp * dp);
             t.setColor(cor);
             return t;
+        }
+
+        // Crédito do fork, embaixo à esquerda (o crédito do port original continua na abertura).
+        private void credito(Canvas c, int w, int h) {
+            String txt = "Fork: Nizar (@nizarrk) · github.com/nizarrk";
+            Paint t = texto(11, false, 0xB3E8E2D6);
+            float y = h - 40 * dp, av = 18 * dp, x0 = margem();
+            if (github != null) {
+                RectF dst = new RectF(x0, y - av * 0.5f - t.getTextSize() * 0.35f, x0 + av, y + av * 0.5f - t.getTextSize() * 0.35f);
+                c.save();
+                Path circ = new Path();
+                circ.addCircle(dst.centerX(), dst.centerY(), av / 2, Path.Direction.CW);
+                c.clipPath(circ);
+                c.drawBitmap(github, null, dst, new Paint(Paint.FILTER_BITMAP_FLAG | Paint.ANTI_ALIAS_FLAG));
+                c.restore();
+                x0 += av + 8 * dp;
+            }
+            c.drawText(txt, x0, y + t.getTextSize() * 0.35f, t);
         }
 
         // "✕ Jogar   ○ Voltar" embaixo à direita

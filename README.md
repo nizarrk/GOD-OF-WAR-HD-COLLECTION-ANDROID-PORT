@@ -16,6 +16,11 @@
 
 </div>
 
+> [!NOTE]
+> **🇺🇸 This is a fork maintained by [Nizar (@nizarrk)](https://github.com/nizarrk).** The original port is by **Luis Santos "DESANTA"** ([luisxl15](https://github.com/luisxl15)) and all the credit for it stays with him — this fork only adds the fixes listed in [Changes in this fork](#-changes-in-this-fork). It is published as is, without support.
+>
+> **🇧🇷 Este é um fork mantido por [Nizar (@nizarrk)](https://github.com/nizarrk).** O port original é de **Luis Santos "DESANTA"** ([luisxl15](https://github.com/luisxl15)) e todo o crédito continua com ele — este fork só traz as correções listadas em [Changes in this fork](#-changes-in-this-fork). É publicado como está, sem suporte.
+
 > [!WARNING]
 > **🇧🇷 PROJETO DE DEMONSTRAÇÃO. NÃO HÁ SUPORTE.** Este repositório mostra uma técnica (recompilação estática de um jogo do PS Vita para Android). Ele é publicado como está: não há suporte, garantia, prazo nem atendimento de issues ou pedidos. Pode não funcionar no seu aparelho.
 >
@@ -208,6 +213,21 @@ third_party/      libraries used (each with its own license)
 tools/            translations, PKG extractor, code-generated art
 scripts/          Android build
 ```
+
+---
+
+## 🔧 Changes in this fork
+
+Fork of [luisxl15/GOD-OF-WAR-HD-COLLECTION-ANDROID-PORT](https://github.com/luisxl15/GOD-OF-WAR-HD-COLLECTION-ANDROID-PORT), maintained by [@nizarrk](https://github.com/nizarrk). The port itself, its credits and the donation links remain the original author's.
+
+- **Diagnostic log**: a full report (device/SoC, GPU and Vulkan driver, driver selection, game files, the tail of the vitart log and recent logcat) is saved on every game launch and on an early exit, and can be opened from the launcher (magnifier shortcut). It is written to `logs/diagnostico.txt` in the game folder and to the app's internal storage.
+- **Black screen on Android 17 / Samsung Xclipse (tested on a Galaxy A57, Exynos 1680 / Xclipse 550)** — three fixes:
+  - the game window is translucent (`Tema.Jogo`): on Android 17 the opaque window was covering the Vulkan `SurfaceView`, so only the touch controls were visible;
+  - the bundled Vulkan layer is now `libvkshim.so` and `libvitart.so` links against it: Android 17 treats `libvulkan.so` as a public library and ignores the APK's copy, so the choice of driver never ran; the shim also falls back to a direct `dlopen` of the driver when `libadrenotools`' linker bypass is unavailable;
+  - the present path draws the frame with a render pass instead of `vkCmdBlitImage`, which returns black on the XGL driver (Xclipse 550).
+- **Build scripts** updated for the shim rename (`scripts/build-android-vkshim.sh`, `scripts/build-android-runtime.sh`).
+- The GitHub shortcut points to this fork; the original credit stays in the opening animation and the "Support the project" links still go to the original author.
+- **Note (game data, not code)**: on a game folder copied from the PC, the pt-BR translation can be baked into `data/mods/gow1_psp2_SCEA.psarc.vtpatch`; disabling that patch restores the game's original English texts while keeping the fix for the black screen.
 
 ---
 

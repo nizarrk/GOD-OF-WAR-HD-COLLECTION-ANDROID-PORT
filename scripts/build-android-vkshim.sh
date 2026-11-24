@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# libvulkan.so próprio (troca de driver: Turnip etc.) + ganchos da libadrenotools, em build/lib.
+# libvkshim.so próprio (troca de driver: Turnip/RADV etc.) + ganchos da libadrenotools, em build/lib.
 #   scripts/build-android-vkshim.sh        (depois do build-android-runtime.sh: as funções vêm do libvitart.so)
+# Nome diferente de libvulkan.so de propósito: no Android novo libvulkan.so é biblioteca pública e o loader
+# ignora a do APK (o jogo ia direto no driver do sistema, sem conseguir trocar de driver).
 # libadrenotools (BSD-2, Billy Laws), a cópia que o DroidDeck usa (third_party/adrenotools); ADRENOTOOLS=<pasta> troca.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
@@ -50,7 +52,7 @@ done
 # 4. o shim
 "$TC/clang" $T -O2 -fPIC -w -I"$AT/include" -I"$O" -c runtime/vkshim/vkshim.c -o "$O/vkshim.o"
 "$TC/clang" $T -c "$O/vkshim_stubs.S" -o "$O/vkshim_stubs.o"
-"$TC/clang++" $T -shared -fPIC -static-libstdc++ -o build/lib/libvulkan.so "$O/vkshim.o" "$O/vkshim_stubs.o" \
-  "$O/driver.o" "$O/bcenabler.o" $NS $LD -Wl,-soname,libvulkan.so -Wl,--version-script="$O/vkshim.map" -landroid -llog -ldl
-for l in libvulkan libhook_impl libmain_hook libfile_redirect_hook libgsl_alloc_hook; do "$TC/llvm-strip" --strip-unneeded build/lib/$l.so; done
-echo "pronto: build/lib/libvulkan.so ($N funções) + ganchos"
+"$TC/clang++" $T -shared -fPIC -static-libstdc++ -o build/lib/libvkshim.so "$O/vkshim.o" "$O/vkshim_stubs.o" \
+  "$O/driver.o" "$O/bcenabler.o" $NS $LD -Wl,-soname,libvkshim.so -Wl,--version-script="$O/vkshim.map" -landroid -llog -ldl
+for l in libvkshim libhook_impl libmain_hook libfile_redirect_hook libgsl_alloc_hook; do "$TC/llvm-strip" --strip-unneeded build/lib/$l.so; done
+echo "pronto: build/lib/libvkshim.so ($N funções) + ganchos"

@@ -45,6 +45,16 @@ static void *abrir(void) {
             LOG("Vulkan pelo driver próprio %s%s", dir, nome);
             return h;
         }
+        // Android novo: o linkernsbypass do libadrenotools não acha mais os símbolos privados do linker. O .so do
+        // driver está na pasta privada do app (o dlopen só recusa o armazenamento comum), então tenta direto.
+        char caminho[1200];
+        snprintf(caminho, sizeof caminho, "%s%s", dir, nome);
+        void *direto = dlopen(caminho, RTLD_NOW | RTLD_LOCAL);
+        if (direto) {
+            snprintf(g_status, sizeof g_status, "driver próprio (dlopen): %s", nome);
+            LOG("Vulkan pelo driver próprio, sem adrenotools: %s", caminho);
+            return direto;
+        }
         const char *erro = dlerror();
         snprintf(g_status, sizeof g_status, "driver próprio %s não abriu (%s); usando o do sistema", nome, erro ? erro : "?");
         LOG("%s", g_status);

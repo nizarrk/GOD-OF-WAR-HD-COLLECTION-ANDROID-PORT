@@ -48,8 +48,10 @@ for c in third_party/libatrac9/src/*.c; do
   o="$OBJ/at9_$(basename "${c%.c}").o"
   [ "$o" -nt "$c" ] || "$TC/clang" $T -std=c99 -O2 -fPIC -w -c "$c" -o "$o"
 done
+# o Vulkan vem do shim do APK (libvkshim.so, gerado pelo build-android-vkshim.sh): libvulkan.so seria a do
+# sistema, que no Android novo ignora a do APK e não carrega o driver escolhido
 "$TC/clang++" $T -shared -fPIC -static-libstdc++ -o build/lib/libvitart.so "$OBJ"/*.o "$SPVL/libSPIRV-Tools-opt.a" "$SPVL/libSPIRV-Tools.a" \
   -Wl,--gc-sections -Wl,--no-undefined -Wl,-z,max-page-size=16384 -Wl,-soname,libvitart.so \
-  -lvulkan -laaudio -landroid -llog -ldl -lm
+  -Lbuild/lib -l:libvkshim.so -laaudio -landroid -llog -ldl -lm
 "$TC/llvm-strip" --strip-unneeded build/lib/libvitart.so
 echo "pronto: build/lib/libvitart.so ($(du -h build/lib/libvitart.so | cut -f1))"

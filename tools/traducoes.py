@@ -91,6 +91,16 @@ T = [
      "Carte ou solde PayPal, depuis n'importe quel pays", "Karte oder PayPal-Guthaben, aus jedem Land", "Carta o saldo PayPal, da qualsiasi paese"),
     ("Ou leia o QR code com outro aparelho", "Or scan the QR code with another device", "O escanea el código QR con otro dispositivo",
      "Ou scannez le QR code avec un autre appareil", "Oder scanne den QR-Code mit einem anderen Gerät", "Oppure inquadra il QR code con un altro dispositivo"),
+    # ---- diagnóstico do sistema (relatório salvo ao abrir o jogo e no lançador)
+    ("Diagnóstico do Sistema", "System Diagnostic", "Diagnóstico del sistema", "Diagnostic du système", "Systemdiagnose",
+     "Diagnostico del sistema"),
+    ("Diagnóstico copiado para a área de transferência!", "Diagnostic copied to the clipboard!", "Diagnóstico copiado al portapapeles!",
+     "Diagnostic copié dans le presse-papiers !", "Diagnose in die Zwischenablage kopiert!", "Diagnostico copiato negli appunti!"),
+    ("Compartilhar diagnóstico", "Share diagnostic", "Compartir diagnóstico", "Partager le diagnostic", "Diagnose teilen",
+     "Condividi diagnostico"),
+    ("Copiar", "Copy", "Copiar", "Copier", "Kopieren", "Copia"),
+    ("Compartilhar", "Share", "Compartir", "Partager", "Teilen", "Condividi"),
+    ("Fechar", "Close", "Cerrar", "Fermer", "Schließen", "Chiudi"),
     # ---- troféus
     ("Troféus de ", "Trophies of ", "Trofeos de ", "Trophées de ", "Trophäen von ", "Trofei di "),
     (" zerados neste celular (o antigo ficou em unlocked.txt.bak)", " reset on this phone (the old file is unlocked.txt.bak)",

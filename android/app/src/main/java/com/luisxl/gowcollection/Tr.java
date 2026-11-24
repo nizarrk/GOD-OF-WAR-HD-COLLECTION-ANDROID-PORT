@@ -80,6 +80,12 @@ final class Tr {
         p("Pix na hora; a sua mensagem aparece na live", "Instant Pix (Brazil); your message shows up on the live stream", "Pix al instante (Brasil); tu mensaje aparece en el directo", "Pix instantané (Brésil) ; votre message s'affiche pendant le live", "Sofort per Pix (Brasilien); deine Nachricht erscheint im Livestream", "Pix immediato (Brasile); il tuo messaggio appare in live");
         p("Cartão ou saldo do PayPal, de qualquer país", "Card or PayPal balance, from any country", "Tarjeta o saldo de PayPal, desde cualquier país", "Carte ou solde PayPal, depuis n'importe quel pays", "Karte oder PayPal-Guthaben, aus jedem Land", "Carta o saldo PayPal, da qualsiasi paese");
         p("Ou leia o QR code com outro aparelho", "Or scan the QR code with another device", "O escanea el código QR con otro dispositivo", "Ou scannez le QR code avec un autre appareil", "Oder scanne den QR-Code mit einem anderen Gerät", "Oppure inquadra il QR code con un altro dispositivo");
+        p("Diagnóstico do Sistema", "System Diagnostic", "Diagnóstico del sistema", "Diagnostic du système", "Systemdiagnose", "Diagnostico del sistema");
+        p("Diagnóstico copiado para a área de transferência!", "Diagnostic copied to the clipboard!", "Diagnóstico copiado al portapapeles!", "Diagnostic copié dans le presse-papiers !", "Diagnose in die Zwischenablage kopiert!", "Diagnostico copiato negli appunti!");
+        p("Compartilhar diagnóstico", "Share diagnostic", "Compartir diagnóstico", "Partager le diagnostic", "Diagnose teilen", "Condividi diagnostico");
+        p("Copiar", "Copy", "Copiar", "Copier", "Kopieren", "Copia");
+        p("Compartilhar", "Share", "Compartir", "Partager", "Teilen", "Condividi");
+        p("Fechar", "Close", "Cerrar", "Fermer", "Schließen", "Chiudi");
         p("Troféus de ", "Trophies of ", "Trofeos de ", "Trophées de ", "Trophäen von ", "Trofei di ");
         p(" zerados neste celular (o antigo ficou em unlocked.txt.bak)", " reset on this phone (the old file is unlocked.txt.bak)", " reiniciados en este móvil (el anterior quedó en unlocked.txt.bak)", " réinitialisés sur ce téléphone (l'ancien est dans unlocked.txt.bak)", " auf diesem Telefon zurückgesetzt (die alte Datei ist unlocked.txt.bak)", " azzerati su questo telefono (il vecchio è in unlocked.txt.bak)");
         p("Não deu para zerar", "Could not reset", "No se pudo reiniciar", "Réinitialisation impossible", "Zurücksetzen fehlgeschlagen", "Impossibile azzerare");
