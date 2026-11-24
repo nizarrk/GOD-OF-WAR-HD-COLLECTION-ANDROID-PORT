@@ -38,7 +38,10 @@ import javax.crypto.spec.SecretKeySpec;
 final class Instalador {
     static final String CONTENT_ID = "UP9000-PCSA00126_00-GOWCUS030100SHIP";
     static final long PKG_TAMANHO = 3336914560L;
+    // de onde vêm os DADOS (sempre o repositório original, que tem as releases cifradas)
     static final String REPO = "luisxl15/GOD-OF-WAR-HD-COLLECTION-ANDROID-PORT";
+    // de onde vem o APK da atualização (este fork)
+    static final String REPO_APP = "nizarrk/GOD-OF-WAR-HD-COLLECTION-ANDROID-PORT";
 
     interface Aviso {
         // etapa (texto para a tela), feito/total (bytes; total 0 = sem barra)
@@ -363,7 +366,7 @@ final class Instalador {
     }
 
     static Release ultimaRelease() throws Exception {
-        HttpURLConnection h = (HttpURLConnection) new URL("https://api.github.com/repos/" + REPO + "/releases/latest").openConnection();
+        HttpURLConnection h = (HttpURLConnection) new URL("https://api.github.com/repos/" + REPO_APP + "/releases/latest").openConnection();
         h.setRequestProperty("Accept", "application/vnd.github+json");
         h.setRequestProperty("User-Agent", "GowCollection-android");
         h.setConnectTimeout(15000);

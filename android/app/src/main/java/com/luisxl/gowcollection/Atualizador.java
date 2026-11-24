@@ -14,7 +14,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-// Atualização pelas releases do GitHub (Instalador.REPO): a release mais nova que a versão instalada traz o APK
+// Atualização pelas releases do GitHub (Instalador.REPO_APP, o fork): a release mais nova que a versão instalada traz o APK
 // (qualquer asset .apk) e, se tiver, um pacote de dados "atualizacao__*" (cifrado com a mesma chave da instalação,
 // guardada em files/chave). Baixa com barra de progresso e instala pelo PackageInstaller: do Android 12 em diante
 // sem pedir confirmação quando este app foi quem instalou a versão atual; senão o Android mostra a tela de instalar.

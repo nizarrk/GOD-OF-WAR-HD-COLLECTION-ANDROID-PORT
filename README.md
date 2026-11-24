@@ -226,6 +226,7 @@ Fork of [luisxl15/GOD-OF-WAR-HD-COLLECTION-ANDROID-PORT](https://github.com/luis
   - the bundled Vulkan layer is now `libvkshim.so` and `libvitart.so` links against it: Android 17 treats `libvulkan.so` as a public library and ignores the APK's copy, so the choice of driver never ran; the shim also falls back to a direct `dlopen` of the driver when `libadrenotools`' linker bypass is unavailable;
   - the present path draws the frame with a render pass instead of `vkCmdBlitImage`, which returns black on the XGL driver (Xclipse 550).
 - **Build scripts** updated for the shim rename (`scripts/build-android-vkshim.sh`, `scripts/build-android-runtime.sh`).
+- The in-app updater reads releases from this fork (`Instalador.REPO_APP`); the encrypted game-data packages are still fetched from the original repository, which is the only place that has them.
 - The GitHub shortcut points to this fork; the original credit stays in the opening animation and the "Support the project" links still go to the original author.
 - **Note (game data, not code)**: on a game folder copied from the PC, the pt-BR translation can be baked into `data/mods/gow1_psp2_SCEA.psarc.vtpatch`; disabling that patch restores the game's original English texts while keeping the fix for the black screen.
 

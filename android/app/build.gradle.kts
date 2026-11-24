@@ -14,8 +14,8 @@ android {
         applicationId = "com.luisxl.gowcollection"
         minSdk = 28 // AAudio e Vulkan 1.1 de verdade
         targetSdk = 35
-        versionCode = 3
-        versionName = "0.1.2"
+        versionCode = 4
+        versionName = "0.1.2-fork.1"
         ndk { abiFilters += listOf("arm64-v8a") }
     }
     sourceSets["main"].jniLibs.directories.add("src/main/jniLibs")
